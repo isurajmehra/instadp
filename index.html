@@ -22,10 +22,22 @@
         <button type="button" class="btn btn-primary" id="getPic">Get Image</button>
       </div>
     </div>
-    <img src="" alt="" style="max-width:100%; margin-top:20px">
+    <div class="image-div" style="margin-top:20px;width:100%;">
+    	<p class="loading msg" style=" display:none">loading image...</p>
+    	<p class="not-found msg" style=" display:none">Wrong ID</p>
+    	<img src="" alt="" style="max-width:100%;">
+    </div>
+    
   </div>
   <script>
   $("#getPic").click(function() {
+  	$(".msg").hide();
+  	$(".loading").show();
+  	$("img").attr("src","");
+  	var timeout = setTimeout(function(){
+  		$(".msg").hide();
+  		$(".not-found").show();
+  	}, 10000);
   	var username = $("#usr").val();
     $.ajax({
       url: "https://instadp.herokuapp.com/"+username,
@@ -34,6 +46,8 @@
     }).done(function(msg) {
       var splited = msg.split("/");
       var mainURL = splited[0] + "//" + splited[2] + "/" + splited[3] + "/" + splited[7];
+      clearTimeout(timeout);
+      $(".loading").hide();
       $("img").attr("src",mainURL);
     });
   });
